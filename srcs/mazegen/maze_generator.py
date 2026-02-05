@@ -6,8 +6,10 @@ from .solver import MazeSolver
 
 class MazeGenerator:
     # configを使う,seedも
-    def __init__(self):
-        pass
+    def __init__(self, width: int, height: int,
+                 entry: tuple[int], exit: tuple[int],
+                 output_file: str, perfect: bool, seed: int):
+        self.config = MazeConfig()
 
     # 引数でアルゴリズム切り替え
     # listのlist,bitmap
