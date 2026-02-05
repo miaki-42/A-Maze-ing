@@ -4,8 +4,8 @@ from pydantic import BaseModel, Field, model_validator
 from typing import Optional
 
 class MazeConfig(BaseModel):
-    width: int = Field(ge=7, description="Width of the maze (minimum 7)")
-    height: int = Field(ge=5, description="Height of the maze (minimum 5)")
+    width: int = Field(ge=1, description="Width of the maze")
+    height: int = Field(ge=1, description="Height of the maze")
     entry: tuple[int, int] = Field(description="Entry point coordinates (x, y)")
     exit: tuple[int, int] = Field(description="Exit point coordinates (x, y)")
     output_file: str = Field(description="Output file path")
