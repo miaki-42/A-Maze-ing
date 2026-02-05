@@ -1,8 +1,8 @@
 # 方向ビットマスク
 NORTH = 1
 SOUTH = 2
-EAST  = 4
-WEST  = 8
+EAST = 4
+WEST = 8
 
 # 内部処理用フラグ
 VOID = 16
