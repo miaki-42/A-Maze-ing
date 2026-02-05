@@ -17,8 +17,8 @@ class DiggingGenerator(MazeGeneratorBase):
         p_height = len(PATTERN_42)
         p_width = len(PATTERN_42[0])
 
-        if (self.config.width < p_width + 2
-            or self.config.height < p_height + 2):
+        if (self.config.width < p_width
+            or self.config.height < p_height):
 
             print("Error: Maze is too small for the '42' pattern.",
                   file=sys.stderr)
@@ -34,6 +34,26 @@ class DiggingGenerator(MazeGeneratorBase):
                     target_y = offset_y + r
 
                     self.grid[target_y][target_x] |= VOID
+
+    def _break_wall(self, x: int, y: int, direction: int) -> None:
+
+        opposite = {
+            NORTH: SOUTH,
+            SOUTH: NORTH,
+            EAST: WEST,
+            WEST: EAST
+        }
+
+        self.grid[y][x] &= ~direction
+
+        nx, ny = x, y
+        if direction == NORTH: ny -= 1
+        elif direction == SOUTH: ny += 1
+        elif direction == EAST: nx += 1
+        elif direction == WEST: nx -= 1
+
+        if 0 <= nx < self.config.width and 0 <= ny < self.config.height:
+            self.grid[ny][nx] &= ~opposite[direction]
 
     def generate(self):
         self._apply_pattern_42()
