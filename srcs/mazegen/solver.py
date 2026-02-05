@@ -52,4 +52,5 @@ class MazeSolver:
     
 
 # x, y 入れ替える
+# マクロ
 # from enum import IntFlag <- 使う?
