@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
+import sys
 from .config import MazeConfig
-#from .algorithms import
+from .algorithms import DiggingGenerator
 from .solver import MazeSolver
 
 class MazeGenerator:
@@ -11,12 +12,23 @@ class MazeGenerator:
                  output_file: str, perfect: bool, seed: int):
         self.config = MazeConfig(width=width, height=height, entry=entry, exit=exit,
                                  output_file=output_file, perfect=perfect, seed=seed)
+        self.grid = None
+        self.solution_path = None
 
     # 引数でアルゴリズム切り替え
     # listのlist,bitmap
-    def generate(self) -> list:
-        pass
+    def generate(self) -> list[list[int]]:
+        generator = DiggingGenerator(self.config)
+        self.grid = generator.generate()
+        return self.grid
 
     # ルート順を文字列で返す,n,e,s,w
-    def solver(self) -> str:
-        return MazeSolver.solve()
+    def solve(self) -> str | None:
+        if self.grid is None:
+            print("Error: Maze not generated yet. "
+                  "Please call generate() before attempting to solve.",
+                  file=sys.stderr)
+            return None
+
+        return MazeSolver.solve(self.grid, self.config)
+    
