@@ -19,4 +19,4 @@ class MazeGenerator:
 
     # ルート順を文字列で返す,n,e,s,w
     def solver(self) -> str:
-        pass
+        return MazeSolver.solve()
