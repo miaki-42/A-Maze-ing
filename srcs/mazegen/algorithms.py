@@ -96,4 +96,9 @@ class DiggingGenerator(MazeGeneratorBase):
                 stack.pop()
 
     def generate(self):
+
         self._apply_pattern_42()
+
+        start_x, start_y = self.config.entry
+        self._dig_iterative(start_x, start_y)
+        
