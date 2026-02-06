@@ -17,8 +17,8 @@ class DiggingGenerator(MazeGeneratorBase):
         p_height = len(PATTERN_42)
         p_width = len(PATTERN_42[0])
 
-        if (self.config.width < p_width
-            or self.config.height < p_height):
+        if (self.config.width < p_width + 1
+            or self.config.height < p_height + 1):
 
             print("Error: Maze is too small for the '42' pattern.",
                   file=sys.stderr)
@@ -27,13 +27,24 @@ class DiggingGenerator(MazeGeneratorBase):
         offset_x = (self.config.width - p_width) // 2
         offset_y = (self.config.height - p_height) // 2
 
+        target_coords = []
+        forbidden_coords = {self.config.entry, self.config.exit}
+
         for r, row_str in enumerate(PATTERN_42):
             for c, char in enumerate(row_str):
                 if char == '#':
                     target_x = offset_x + c
                     target_y = offset_y + r
 
-                    self.grid[target_y][target_x] |= VOID
+                    if (target_x, target_y) in forbidden_coords:
+                        print("Error: '42' pattern overlaps with Entry/Exit.",
+                              file=sys.stderr)
+                        return
+
+                    target_coords.append((target_x, target_y))
+
+        for target_x, target_y in target_coords:
+            self.grid[target_y][target_x] |= VOID
 
     def _break_wall(self, x: int, y: int, direction: int) -> None:
 
