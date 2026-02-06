@@ -30,5 +30,5 @@ class MazeGenerator:
                   file=sys.stderr)
             return None
 
-        return MazeSolver.solve(self.grid, self.config)
-    
+        self.solution_path = MazeSolver.solve(self.grid, self.config)
+        return self.solution_path
