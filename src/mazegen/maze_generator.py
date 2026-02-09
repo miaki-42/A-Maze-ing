@@ -32,3 +32,19 @@ class MazeGenerator:
 
         self.solution_path = MazeSolver.solve(self.grid, self.config)
         return self.solution_path
+
+
+
+class MazeGenerator:
+    def __init__(
+            self, width: int, height: int,
+            entry: tuple[int], exit: tuple[int],
+            output_file: str, perfect: bool, seed: int
+            ) -> None:
+        
+        self._config = MazeConfig(
+            width=width, height=height, entry=entry, exit=exit,
+            output_file=output_file, perfect=perfect, seed=seed
+            )
+        self._generator = DiggingGenerator(self._config)
+        self._solver = 
