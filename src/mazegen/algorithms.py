@@ -46,26 +46,6 @@ class DiggingGenerator(MazeGeneratorBase):
         for target_x, target_y in target_coords:
             self.grid[target_y][target_x] |= VOID
 
-    def _break_wall(self, x: int, y: int, direction: int) -> None:
-
-        opposite = {
-            NORTH: SOUTH,
-            SOUTH: NORTH,
-            EAST: WEST,
-            WEST: EAST
-        }
-
-        self.grid[y][x] &= ~direction
-
-        nx, ny = x, y
-        if direction == NORTH: ny -= 1
-        elif direction == SOUTH: ny += 1
-        elif direction == EAST: nx += 1
-        elif direction == WEST: nx -= 1
-
-        if 0 <= nx < self.config.width and 0 <= ny < self.config.height:
-            self.grid[ny][nx] &= ~opposite[direction]
-
     def _dig_iterative(self, start_x: int, start_y: int) -> None:
 
         stack = [(start_x, start_y)]
