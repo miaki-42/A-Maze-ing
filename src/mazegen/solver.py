@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 
-from .constants import NORTH, SOUTH, EAST, WEST
-from .config import MazeConfig
+from typing import Optional
 from collections import deque
+from .constant import NORTH, SOUTH, EAST, WEST
+from .config import MazeConfig
 
 
-class MazeSolver:
-    @staticmethod
-    def solve(maze: list[list[int]], config: MazeConfig) -> str:
-        directions = [((0, -1), "N", NORTH), ((1, 0), "E", EAST),
-                      ((0, 1), "S", SOUTH), ((-1, 0), "W", WEST)]
+class BFSSolver:
+    def solve(self, maze: list[list[int]], config: MazeConfig) -> Optional[str]:
+        directions = [
+            ((0, -1), "N", NORTH),
+            ((1, 0), "E", EAST),
+            ((0, 1), "S", SOUTH),
+            ((-1, 0), "W", WEST)
+        ]
         queue, discovered = deque(), set()
         came_from = {}
 
@@ -21,7 +25,7 @@ class MazeSolver:
             curr_xy = queue.popleft()
             curr_x, curr_y = curr_xy
             if curr_xy == config.exit:  # Found
-                return MazeSolver._reconstruct_path(came_from, config.exit)
+                return self._reconstruct_path(came_from, config.exit)
             for (dx, dy), letter, bit in directions:
                 next_xy = (curr_x + dx, curr_y + dy)
                 if maze[curr_y][curr_x] & bit:  # Wall
@@ -32,12 +36,11 @@ class MazeSolver:
                 discovered.add(next_xy)
                 came_from[next_xy] = (curr_xy, letter)
 
-        return ""
+        return None
 
-    @staticmethod
-    def _reconstruct_path(came_from: dict, exit_pos: tuple[int, int]) -> str:
+    def _reconstruct_path(self, came_from: dict, exit: tuple[int, int]) -> str:
         moves = []
-        curr_pos = exit_pos
+        curr_pos = exit
         while True:
             prev_pos, move_letter = came_from[curr_pos]
             if not prev_pos:
