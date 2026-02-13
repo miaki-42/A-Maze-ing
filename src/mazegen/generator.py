@@ -1,16 +1,31 @@
 #!/usr/bin/env python3
 
 import sys
+from random import Random
+from .constant import NORTH, EAST, SOUTH, WEST, VOID, PATTERN_42
+from .abstract import AbstractGeneratorAlgorithm
 from .config import MazeConfig
-from .base import MazeGeneratorBase
-from .constants import NORTH, SOUTH, EAST, WEST, VOID, PATTERN_42
 
-class DiggingGenerator(MazeGeneratorBase):
-
+class DiggingGenerator(AbstractGeneratorAlgorithm):
     def __init__(self, config: MazeConfig) -> None:
         super().__init__(config)
-        self.grid = [[15 for _ in range(self.config.width)]
-                     for _ in range(self.config.height)]
+        self.grid = DiggingGenerator._init_grid(
+            self.config.width,
+            self.config.height
+        )
+
+    def generate(self) -> list[list[int]]:
+
+        self._apply_pattern_42()
+
+        start_x, start_y = self.config.entry
+        self._dig_iterative(start_x, start_y)
+
+        return self.grid
+
+    @staticmethod
+    def _init_grid(width: int, height: int) -> list[list[int]]:
+        return [[15 for _ in range(width)] for _ in range(height)]
 
     def _apply_pattern_42(self) -> None:
 
@@ -58,10 +73,14 @@ class DiggingGenerator(MazeGeneratorBase):
 
             for direction in directions:
                 new_x, new_y = cur_x, cur_y
-                if direction == NORTH: new_y -= 1
-                elif direction == SOUTH: new_y += 1
-                elif direction == EAST: new_x += 1
-                elif direction == WEST: new_x -= 1
+                if direction == NORTH:
+                    new_y -= 1
+                elif direction == SOUTH:
+                    new_y += 1
+                elif direction == EAST:
+                    new_x += 1
+                elif direction == WEST:
+                    new_x -= 1
 
                 if (0 <= new_x < self.config.width and
                     0 <= new_y < self.config.height and
@@ -74,12 +93,3 @@ class DiggingGenerator(MazeGeneratorBase):
 
             else:
                 stack.pop()
-
-    def generate(self) -> list[list[int]]:
-
-        self._apply_pattern_42()
-
-        start_x, start_y = self.config.entry
-        self._dig_iterative(start_x, start_y)
-
-        return self.grid

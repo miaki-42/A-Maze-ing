@@ -1,40 +1,38 @@
 #!/usr/bin/env python3
 
 import sys
+from typing import Optional
 from .config import MazeConfig
-from .algorithms import DiggingGenerator
-from .solver import MazeSolver
+from .generator import DiggingGenerator
+from .solver import BFSSolver
+
 
 class MazeGenerator:
-    # configを使う,seedも
     def __init__(self, width: int, height: int,
                  entry: tuple[int], exit: tuple[int],
                  output_file: str, perfect: bool, seed: int):
-        self.config = MazeConfig(width=width, height=height, entry=entry, exit=exit,
-                                 output_file=output_file, perfect=perfect, seed=seed)
+        self.config = MazeConfig(
+            width=width, height=height, entry=entry, exit=exit,
+            output_file=output_file, perfect=perfect, seed=seed
+        )
+        self.generator = DiggingGenerator(self.config)
+        self.solver = BFSSolver()
         self.grid = None
         self.solution_path = None
 
-    # 引数でアルゴリズム切り替え
-    # listのlist,bitmap
     def generate(self) -> list[list[int]]:
-        generator = DiggingGenerator(self.config)
-        self.grid = generator.generate()
+        self.grid = self.generator.generate()
         self.solution_path = None
         return self.grid
 
-    # ルート順を文字列で返す,n,e,s,w
-    def solve(self) -> str | None:
+    def shortest_path(self) -> Optional[str]:
         if self.grid is None:
             print("Error: Maze not generated yet. "
                   "Please call generate() before attempting to solve.",
                   file=sys.stderr)
             return None
 
-        if self.solution_path is not None:
-            return self.solution_path
-
-        self.solution_path = MazeSolver.solve(self.grid, self.config)
+        self.solution_path = self.solver.solve(self.grid, self.config)
         return self.solution_path
 
     def save(self) -> None:
@@ -44,8 +42,6 @@ class MazeGenerator:
         if self.grid is None:
             print("Error: Nothing to save.", file=sys.stderr)
             sys.exit(1)
-
-        path = self.solve()
 
         try:
             with open(self.config.output_file, 'w', encoding='utf-8') as f:

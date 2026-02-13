@@ -2,14 +2,15 @@
 
 import sys
 from typing import Any
-from src.mazegen.models import MazeConfig
+#from src.mazegen.models import MazeConfig
 
-def load_config(path: str) -> MazeConfig:
+#def load_config(path: str) -> MazeConfig:
+def load_config(file_path: str) -> dict[str, Any]:
     """
     設定ファイルを読み込み、バリデーション済みのMazeConfigオブジェクトを返します。
 
     Args:
-        path (str): 設定ファイルへのパス [cite: 113]
+        path (str): 設定ファイルへのパス
 
     Returns:
         MazeConfig: バリデーション済みの設定データ
@@ -20,7 +21,7 @@ def load_config(path: str) -> MazeConfig:
     raw_data: dict[str, str] = {}
 
     try:
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
                 line = line.strip()
 
@@ -55,7 +56,8 @@ def load_config(path: str) -> MazeConfig:
         if "SEED" in raw_data:
             formatted_data["seed"] = int(raw_data["SEED"])
 
-        return MazeConfig(**formatted_data)
+        return formatted_data
+        #return MazeConfig(**formatted_data)
 
     except FileNotFoundError:
         print(f"Error: Configuration file '{path}' not found.",

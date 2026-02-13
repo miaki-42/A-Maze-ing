@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
-import random
-from .config import MazeConfig
 from abc import ABC, abstractmethod
+from random import Random
+from .constant import NORTH, EAST, SOUTH, WEST, VOID
+from .config import MazeConfig
 
 
-class MazeGeneratorBase(ABC):
+class AbstractGeneratorAlgorithm(ABC):
 
     def __init__(self, config: MazeConfig) -> None:
         self.config = config
-        self.rng = random.Random(self.config.seed)
+        self.rng = Random(self.config.seed)
         self.grid = None
 
     @abstractmethod
@@ -17,7 +18,6 @@ class MazeGeneratorBase(ABC):
         pass
 
     def _break_wall(self, x: int, y: int, direction: int) -> None:
-
         opposite = {
             NORTH: SOUTH,
             SOUTH: NORTH,
@@ -28,10 +28,14 @@ class MazeGeneratorBase(ABC):
         self.grid[y][x] &= ~direction
 
         nx, ny = x, y
-        if direction == NORTH: ny -= 1
-        elif direction == SOUTH: ny += 1
-        elif direction == EAST: nx += 1
-        elif direction == WEST: nx -= 1
+        if direction == NORTH:
+            ny -= 1
+        elif direction == SOUTH:
+            ny += 1
+        elif direction == EAST:
+            nx += 1
+        elif direction == WEST:
+            nx -= 1
 
         if 0 <= nx < self.config.width and 0 <= ny < self.config.height:
             self.grid[ny][nx] &= ~opposite[direction]
@@ -44,7 +48,7 @@ class MazeGeneratorBase(ABC):
             for oy in range(y - 2, y + 1):
 
                 if (ox < 0 or oy < 0 or ox + 2 >= self.config.width
-                    or oy + 2 >= self.config.height):
+                or oy + 2 >= self.config.height):
                     continue
 
                 if self._is_3x3_area_empty(ox, oy, x, y, direction):
