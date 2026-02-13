@@ -1,13 +1,25 @@
 #!/usr/bin/env python3
+"""
+Maze generator using the digging (DFS) algorithm
+"""
 
 import sys
-from .constant import NORTH, EAST, SOUTH, WEST, VOID, PATTERN_42
-from .abstract import AbstractGeneratorAlgorithm
+from mazegen.constant import NORTH, EAST, SOUTH, WEST, VOID, PATTERN_42
+from mazegen.abstract import AbstractGeneratorAlgorithm
 
 
 class DiggingGenerator(AbstractGeneratorAlgorithm):
+    """
+    Maze generator using the digging (DFS) algorithm.
+    """
 
     def generate(self) -> list[list[int]]:
+        """
+        Generate a maze grid using the digging algorithm.
+
+        Returns:
+            list[list[int]]: The generated maze grid.
+        """
         self.grid = DiggingGenerator._init_grid(
             self.config.width, self.config.height
         )
@@ -17,9 +29,23 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
 
     @staticmethod
     def _init_grid(width: int, height: int) -> list[list[int]]:
+        """
+        Initialize the maze grid with all walls present (value 15).
+
+        Args:
+            width (int): Width of the maze.
+            height (int): Height of the maze.
+
+        Returns:
+            list[list[int]]: Initialized grid.
+        """
         return [[15 for _ in range(width)] for _ in range(height)]
 
     def _apply_pattern_42(self) -> None:
+        """
+        Apply the '42' pattern to the maze grid if the maze is large enough.
+        Outputs an error if the pattern overlaps with entry or exit.
+        """
         p_height, p_width = len(PATTERN_42), len(PATTERN_42[0])
         if (self.config.width <= p_width or self.config.height <= p_height):
             print("Error: Maze is too small for the '42' pattern.",
@@ -46,7 +72,13 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
             self.grid[target_y][target_x] |= VOID
 
     def _dig_iterative(self, start_x: int, start_y: int) -> None:
+        """
+        Iteratively dig paths in the maze using DFS from the start position.
 
+        Args:
+            start_x (int): X coordinate to start digging.
+            start_y (int): Y coordinate to start digging.
+        """
         stack = [(start_x, start_y)]
 
         while stack:
@@ -78,6 +110,14 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
                 stack.pop()
 
     def _break_wall(self, x: int, y: int, direction: int) -> None:
+        """
+        Break the wall in the given direction.
+
+        Args:
+            x (int): X coordinate of the cell.
+            y (int): Y coordinate of the cell.
+            direction (int): Direction to break the wall.
+        """
         opposite = {
             NORTH: SOUTH,
             SOUTH: NORTH,
@@ -102,7 +142,15 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
 
     def _is_safe_to_break(self, x: int, y: int, direction: int) -> bool:
         """
-        壁を壊した結果、3x3の空き地ができないかチェック
+        Check if breaking a wall will not create a 3x3 empty area.
+
+        Args:
+            x (int): X coordinate of the cell.
+            y (int): Y coordinate of the cell.
+            direction (int): Direction to check.
+
+        Returns:
+            bool: True if safe, False otherwise.
         """
         for ox in range(x - 2, x + 1):
             for oy in range(y - 2, y + 1):
@@ -121,14 +169,24 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
     def _is_3x3_area_empty(self, ox: int, oy: int, target_x: int,
                            target_y: int, target_dir: int) -> bool:
         """
-        (ox, oy)を左上とする3x3エリア内の内部壁がすべてなくなっているか判定
+        Check if all internal walls in a 3x3 area are gone.
+
+        Args:
+            ox (int): X coordinate of the top-left of the 3x3 area.
+            oy (int): Y coordinate of the top-left of the 3x3 area.
+            target_x (int): X coordinate of the target cell.
+            target_y (int): Y coordinate of the target cell.
+            target_dir (int): Direction of the target wall.
+
+        Returns:
+            bool: True if the area is empty, False otherwise.
         """
         internal_walls = []
-        # 横方向
+        # Horizontal walls
         for r in range(3):
             for c in range(2):
                 internal_walls.append(((ox + c, oy + r), EAST))
-        # 縦方向
+        # Vertical walls
         for r in range(2):
             for c in range(3):
                 internal_walls.append(((ox + c, oy + r), SOUTH))
@@ -145,7 +203,7 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
 
     def _add_loops(self) -> None:
         """
-        壁を壊して複数ルートを作る
+        Break additional walls to create multiple routes in the maze.
         """
         extra_walls = (self.config.width * self.config.height) // 20
         broken = 0

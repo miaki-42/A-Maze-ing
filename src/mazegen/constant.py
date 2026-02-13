@@ -1,13 +1,18 @@
-# 方向ビットマスク
+#!/usr/bin/env python3
+"""
+Maze constant
+"""
+
+# Direction bitmasks
 NORTH = 1
 EAST = 2
 SOUTH = 4
 WEST = 8
 
-# 内部処理用フラグ
+# Internal processing flags
 VOID = 16
 
-# 42のパターンデータ
+# Pattern data for 42
 PATTERN_42 = [
     "#...###",
     "#.....#",

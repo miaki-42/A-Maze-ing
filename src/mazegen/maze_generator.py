@@ -1,31 +1,61 @@
 #!/usr/bin/env python3
+"""
+Main interface for maze generation, solving, and saving.
+"""
 
 import sys
 from typing import Optional
-from .config import MazeConfig
-from .generator import DiggingGenerator
-from .solver import BFSSolver
+from mazegen.config import MazeConfig
+from mazegen.generator import DiggingGenerator
+from mazegen.solver import BFSSolver
 
 
 class MazeGenerator:
+    """
+    Main interface for maze generation, solving, and saving.
+    """
     def __init__(self, width: int, height: int,
-                 entry: tuple[int], exit: tuple[int],
+                 entry: tuple[int, int], exit: tuple[int, int],
                  output_file: str, perfect: bool, seed: int):
+        """
+        Initialize the MazeGenerator with maze parameters and configuration.
+
+        Args:
+            width (int): Width of the maze.
+            height (int): Height of the maze.
+            entry (tuple[int]): Entry coordinates.
+            exit (tuple[int]): Exit coordinates.
+            output_file (str): Output file path.
+            perfect (bool): Whether the maze is perfect (no loops).
+            seed (int): Random seed.
+        """
         self.config = MazeConfig(
             width=width, height=height, entry=entry, exit=exit,
             output_file=output_file, perfect=perfect, seed=seed
         )
         self.generator = DiggingGenerator(self.config)
         self.solver = BFSSolver()
-        self.grid = None
-        self.solution_path = None
+        self.grid: Optional[list[list[int]]] = None
+        self.solution_path: Optional[str] = None
 
     def generate(self) -> list[list[int]]:
+        """
+        Generate a new maze and store the grid.
+
+        Returns:
+            list[list[int]]: The generated maze grid.
+        """
         self.grid = self.generator.generate()
         self.solution_path = None
         return self.grid
 
     def shortest_path(self) -> Optional[str]:
+        """
+        Find the shortest path in the maze.
+
+        Returns:
+            Optional[str]: The shortest path or None.
+        """
         if self.grid is None:
             print("Error: Maze not generated yet. "
                   "Please call generate() before attempting to solve.",
@@ -37,7 +67,10 @@ class MazeGenerator:
 
     def save(self) -> bool:
         """
-        迷路を指定された形式でファイルに出力します。
+        Save the maze to a file in the specified format.
+
+        Returns:
+            bool: True if successful, False otherwise.
         """
         if self.grid is None:
             print("Error: Nothing to save. "
@@ -56,5 +89,5 @@ class MazeGenerator:
                 f.write(f"{self.solution_path}\n")
         except Exception as e:
             raise Exception(f"Error: saving to file {e}")
-        
+
         return True
