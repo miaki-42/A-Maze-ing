@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
-import sys
 from typing import Any
-#from src.mazegen.models import MazeConfig
 
-#def load_config(path: str) -> MazeConfig:
+
 def load_config(file_path: str) -> dict[str, Any]:
     """
+    raise注意
     設定ファイルを読み込み、バリデーション済みのMazeConfigオブジェクトを返します。
 
     Args:
@@ -29,18 +28,18 @@ def load_config(file_path: str) -> dict[str, Any]:
                     continue
 
                 if '=' not in line:
-                    print(f"Error: Invalid syntax at line {line_num}: "
-                          f"'{line}'", file=sys.stderr)
-                    sys.exit(1)
+                    raise Exception(
+                        f"Error: Invalid syntax at line {line_num}: '{line}'."
+                    )
 
                 key, value = line.split('=', 1)
                 key = key.strip().upper()
                 value = value.strip()
 
                 if key in raw_data:
-                    print(f"Error at line {line_num}: Duplicate key "
-                          f"'{key}' found.", file=sys.stderr)
-                    sys.exit(1)
+                    raise Exception(
+                        f"Error: Duplicate key at line {line_num}: '{key}'."
+                    )
 
                 raw_data[key] = value
 
@@ -57,19 +56,14 @@ def load_config(file_path: str) -> dict[str, Any]:
             formatted_data["seed"] = int(raw_data["SEED"])
 
         return formatted_data
-        #return MazeConfig(**formatted_data)
 
     except FileNotFoundError:
-        print(f"Error: Configuration file '{path}' not found.",
-              file=sys.stderr)
-        sys.exit(1)
+        raise FileNotFoundError(
+            f"Error: Configuration file '{file_path}' not found."
+        )
     except KeyError as e:
-        print(f"Error: Missing mandatory configuration key: {e}",
-              file=sys.stderr)
-        sys.exit(1)
+        raise KeyError(f"Error: Missing mandatory configuration key: {e}")
     except ValueError as e:
-        print(f"Error: Invalid value in configuration: {e}", file=sys.stderr)
-        sys.exit(1)
+        raise ValueError(f"Error: Invalid value in configuration: {e}")
     except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
-        sys.exit(1)
+        raise Exception(f"Error: Unexpected error: {e}")

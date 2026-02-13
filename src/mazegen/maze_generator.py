@@ -35,26 +35,26 @@ class MazeGenerator:
         self.solution_path = self.solver.solve(self.grid, self.config)
         return self.solution_path
 
-    def save(self) -> None:
+    def save(self) -> bool:
         """
         迷路を指定された形式でファイルに出力します。
         """
         if self.grid is None:
-            print("Error: Nothing to save.", file=sys.stderr)
-            sys.exit(1)
+            print("Error: Nothing to save. "
+                  "Please call generate() before attempting to save.",
+                  file=sys.stderr)
+            return False
 
         try:
             with open(self.config.output_file, 'w', encoding='utf-8') as f:
                 for row in self.grid:
                     hex_row = "".join(f"{cell & 0xF:X}" for cell in row)
                     f.write(f"{hex_row}\n")
-
                 f.write("\n")
-
                 f.write(f"{self.config.entry[0]},{self.config.entry[1]}\n")
                 f.write(f"{self.config.exit[0]},{self.config.exit[1]}\n")
                 f.write(f"{self.solution_path}\n")
-
         except Exception as e:
-            print(f"Error saving to file: {e}", file=sys.stderr)
-            sys.exit(1)
+            raise Exception(f"Error: saving to file {e}")
+        
+        return True
