@@ -14,6 +14,10 @@ COLOR_42 = 0xFF00FF
 COLOR_WALL = [0xFFFFFF, 0x00FFFF, 0xDAA520]
 
 XBUTTON = 17
+KEY_1 = 49
+KEY_2 = 50
+KEY_3 = 51
+KEY_4 = 52
 
 class MazeVisualizer:
 
@@ -43,22 +47,30 @@ class MazeVisualizer:
             self.m.mlx_get_data_addr(self.img_ptr)
         )
         # Mlx Event
-        self.m.mlx_hook(self.win_ptr, XBUTTON, 0, self.close_window, self) # ダメかも->今回は省略かな
         self.m.mlx_key_hook(self.win_ptr, self.handle_keypress, self)
         # First draw
         self.draw_maze()
 
-    # Attention to arguments
+    # Attention to arguments, loop_exit
     def close_window(self, *args) -> None:
+        self.m.mlx_destroy_image(self.mlx_ptr, self.img_ptr)
         self.m.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
-        sys.exit(0)
+        self.m.mlx_loop_exit(self.mlx_ptr)
 
     # Attention to arguments
     def handle_keypress(self, keycode: int, *args) -> None:
-        pass
+        if keycode == KEY_1:
+            pass
+        elif keycode == KEY_2:
+            pass
+        elif keycode == KEY_3:
+            pass
+        elif keycode == KEY_4:
+            self.close_window()
 
     def run(self) -> None:
         self.m.mlx_loop(self.mlx_ptr)
+        sys.exit(0)
 
     def draw_maze(self) -> None:
         # process

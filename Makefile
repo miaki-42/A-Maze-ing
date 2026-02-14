@@ -1,11 +1,6 @@
-.PHONY: install run debug clean lint lint-strict package
-
-#install:
-#	pip install --upgrade pip
-#	pip install flake8 mypy build
-#	pip install -e .
-
 MLXDIR = src/mlx_CLXV
+
+.PHONY: install run debug clean lint lint-strict package
 
 install:
 	pip install --upgrade pip
