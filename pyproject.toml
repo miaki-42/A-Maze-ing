@@ -15,4 +15,7 @@ packages = ["mazegen"]
 package-dir = {"" = "src"}
 
 [tool.mypy]
-exclude = ['venv/']
+exclude = [
+    'venv/',
+    'src/mlx_CLXV',
+]

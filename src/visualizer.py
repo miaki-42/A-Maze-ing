@@ -43,12 +43,13 @@ class MazeVisualizer:
             self.m.mlx_get_data_addr(self.img_ptr)
         )
         # Mlx Event
-        self.m.mlx_hook(self.win_ptr, XBUTTON, 0, self.close_window)
+        self.m.mlx_hook(self.win_ptr, XBUTTON, 0, self.close_window, self) # ダメかも->今回は省略かな
         self.m.mlx_key_hook(self.win_ptr, self.handle_keypress, self)
         # First draw
         self.draw_maze()
 
-    def close_window(self) -> None:
+    # Attention to arguments
+    def close_window(self, *args) -> None:
         self.m.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
         sys.exit(0)
 
@@ -57,7 +58,7 @@ class MazeVisualizer:
         pass
 
     def run(self) -> None:
-        self.m.mlx_loop()
+        self.m.mlx_loop(self.mlx_ptr)
 
     def draw_maze(self) -> None:
         # process
@@ -68,7 +69,6 @@ class MazeVisualizer:
 
     def draw_path(self) -> None:
         pass
-
 
     def regenerate(self) -> None:
         pass
