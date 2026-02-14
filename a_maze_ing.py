@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+import sys
 import argparse
 from mazegen import MazeGenerator
-from config_loader import load_config
+from src.config_loader import load_config
+from src.visualizer import MazeVisualizer
 
 
 if __name__ == "__main__":
@@ -11,14 +13,14 @@ if __name__ == "__main__":
     parser.add_argument("file_path")
     args = parser.parse_args()
 
-    # Generate, Solve, Save
+    # Generate Maze
     try:
         mazegen = MazeGenerator(**load_config(args.file_path))
-        maze = mazegen.generate()
-        path = mazegen.shortest_path()
+        mazegen.generate()
         mazegen.save()
     except Exception as e:
         print(f"Error: {e}")
+        sys.exit(1)
 
     # User interaction
     print(
@@ -30,3 +32,5 @@ if __name__ == "__main__":
     )
 
     # MLX
+    visualizer = MazeVisualizer(mazegen)
+    visualizer.run()

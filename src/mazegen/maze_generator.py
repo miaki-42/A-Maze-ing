@@ -46,7 +46,7 @@ class MazeGenerator:
             list[list[int]]: The generated maze grid.
         """
         self.grid = self.generator.generate()
-        self.solution_path = None
+        self.solution_path = self.solver.solve(self.grid, self.config)
         return self.grid
 
     def shortest_path(self) -> Optional[str]:
@@ -62,7 +62,6 @@ class MazeGenerator:
                   file=sys.stderr)
             return None
 
-        self.solution_path = self.solver.solve(self.grid, self.config)
         return self.solution_path
 
     def save(self) -> bool:
