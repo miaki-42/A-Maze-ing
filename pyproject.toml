@@ -12,4 +12,7 @@ dependencies = [
 
 [tool.setuptools]
 packages = ["mazegen"]
-package-dir = {"" = "src"}"
+package-dir = {"" = "src"}
+
+[tool.mypy]
+exclude = ['venv/']

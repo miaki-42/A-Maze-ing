@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-from src.config_loader import load_config
-from src.mazegen.maze_generator import MazeGenerator
+from mazegen import MazeGenerator
+from config_loader import load_config
+
 
 if __name__ == "__main__":
     # Parse args
@@ -19,9 +20,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error: {e}")
 
-    # Mlx
-
-
     # User interaction
     print(
         "=== A-Maze-ing ===\n"
@@ -30,19 +28,5 @@ if __name__ == "__main__":
         "3. Rotate maze colors\n"
         "4. Quit\n"
     )
-    while True:
-        choice = input("Choice? (1-4): ")
-        match choice:
-            case "1":
-                print(mazegen.generate())
-                print()
-                print(mazegen.shortest_path())
-            case "2":
-                pass
-            case "3":
-                pass
-            case "4":
-                break
-            case _:
-                continue
 
+    # MLX

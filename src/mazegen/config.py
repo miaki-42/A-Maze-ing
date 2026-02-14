@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
+"""
+Maze configuration model for maze generation settings.
+"""
 
 from typing import Optional
 from pydantic import BaseModel, Field, model_validator
 
 
 class MazeConfig(BaseModel):
+    """
+    Configuration model for maze generation.
+    """
     width: int = Field(ge=1, description="Width of the maze")
     height: int = Field(ge=1, description="Height of the maze")
     entry: tuple[int, int] = Field(description="Entry point coordinates (x,y)")
@@ -15,6 +21,9 @@ class MazeConfig(BaseModel):
 
     @model_validator(mode="after")
     def validate_coordinates(self) -> "MazeConfig":
+        """
+        Validate entry and exit coordinates.
+        """
         entry_x, entry_y = self.entry
         exit_x, exit_y = self.exit
         if entry_x < 0 or entry_x >= self.width:

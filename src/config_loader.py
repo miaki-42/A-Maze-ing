@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
+"""
+Loader for read the configuration file.
+"""
 
 from typing import Any
 
 
 def load_config(file_path: str) -> dict[str, Any]:
     """
-    raise注意
-    設定ファイルを読み込み、バリデーション済みのMazeConfigオブジェクトを返します。
+    Loads the configuration file.
 
     Args:
-        path (str): 設定ファイルへのパス
+        file_path (str): Path to the configuration file.
 
     Returns:
-        MazeConfig: バリデーション済みの設定データ
+        dict[str, Any]: Validated configuration data.
 
     Raises:
-        SystemExit: ファイル読み込みやパースに失敗した場合
+        Exception: If any error occurs during loading or parsing.
     """
     raw_data: dict[str, str] = {}
 

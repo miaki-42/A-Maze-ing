@@ -1,5 +1,7 @@
+.PHONY: install run debug clean lint lint-strict package
+
 install:
-	pip install -upgrade pip
+	pip install --upgrade pip
 	pip install flake8 mypy build
 	pip install -e .
 
@@ -9,9 +11,9 @@ run:
 debug:
 	python3 -m pdb a_maze_ing.py config.txt
 
-# youshuusei
 clean:
-	rm -rf __pycache__
+	rm -rf .mypy_cache src/mazegen.egg-info dist
+	find . -type d -name "__pycache__" -exec rm -rf {} +
 
 lint:
 	flake8 .

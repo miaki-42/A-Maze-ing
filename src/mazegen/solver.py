@@ -1,21 +1,42 @@
 #!/usr/bin/env python3
+"""
+Maze solver using the Breadth-First Search (BFS) algorithm.
+"""
 
 from typing import Optional
 from collections import deque
-from .constant import NORTH, SOUTH, EAST, WEST
-from .config import MazeConfig
+from mazegen.constant import NORTH, SOUTH, EAST, WEST
+from mazegen.config import MazeConfig
 
 
 class BFSSolver:
-    def solve(self, maze: list[list[int]], config: MazeConfig) -> Optional[str]:
+    """
+    Maze solver using the BFS algorithm.
+    """
+
+    def solve(self, maze: list[list[int]], config: MazeConfig
+              ) -> Optional[str]:
+        """
+        Solve the maze and return the shortest path as a string.
+
+        Args:
+            maze (list[list[int]]): The maze grid.
+            config (MazeConfig): Maze configuration.
+
+        Returns:
+            Optional[str]: The shortest path as a string, or None if not found.
+        """
         directions = [
             ((0, -1), "N", NORTH),
             ((1, 0), "E", EAST),
             ((0, 1), "S", SOUTH),
             ((-1, 0), "W", WEST)
         ]
-        queue, discovered = deque(), set()
-        came_from = {}
+        queue: deque[tuple[int, int]] = deque()
+        discovered = set()
+        came_from: dict[
+            tuple[int, int], tuple[Optional[tuple[int, int]], str]
+        ] = {}
 
         queue.append(config.entry)
         discovered.add(config.entry)
@@ -24,13 +45,16 @@ class BFSSolver:
         while queue:
             curr_xy = queue.popleft()
             curr_x, curr_y = curr_xy
-            if curr_xy == config.exit:  # Found
+            # Found
+            if curr_xy == config.exit:
                 return self._reconstruct_path(came_from, config.exit)
             for (dx, dy), letter, bit in directions:
                 next_xy = (curr_x + dx, curr_y + dy)
-                if maze[curr_y][curr_x] & bit:  # Wall
+                # Wall
+                if maze[curr_y][curr_x] & bit:
                     continue
-                if next_xy in discovered:  # Already discovered
+                # Already discovered
+                if next_xy in discovered:
                     continue
                 queue.append(next_xy)
                 discovered.add(next_xy)
@@ -38,7 +62,23 @@ class BFSSolver:
 
         return None
 
-    def _reconstruct_path(self, came_from: dict, exit: tuple[int, int]) -> str:
+    def _reconstruct_path(
+            self,
+            came_from: dict[
+                tuple[int, int], tuple[Optional[tuple[int, int]], str]
+            ],
+            exit: tuple[int, int]
+    ) -> str:
+        """
+        Reconstruct the path from entry to exit.
+
+        Args:
+            came_from (dict): Dictionary of previous positions.
+            exit (tuple[int, int]): Exit coordinates.
+
+        Returns:
+            str: The path as a string of directions.
+        """
         moves = []
         curr_pos = exit
         while True:
