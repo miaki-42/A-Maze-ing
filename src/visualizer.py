@@ -52,18 +52,21 @@ class MazeVisualizer:
         self.m.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
         sys.exit(0)
 
+    # Attention to arguments
+    def handle_keypress(self, keycode: int, *args) -> None:
+        pass
+
     def run(self) -> None:
         self.m.mlx_loop()
 
     def draw_maze(self) -> None:
-        pass
+        # process
+        self.m.mlx_put_image_to_window(
+            self.mlx_ptr, self.win_ptr, self.img_ptr, 0, 0
+        )
 
 
     def draw_path(self) -> None:
-        pass
-
-
-    def handle_keypress(self) -> None:
         pass
 
 
@@ -72,24 +75,4 @@ class MazeVisualizer:
 
     def rotate_wall_color(self) -> None:
         pass
-
-
-
-
-# 4. メモリ（img_data）に直接ピクセルを書き込む
-# 例: 画面全体を青色 (0x0000FF) で塗りつぶす
-# 多くの環境では BGRA 順（Blue, Green, Red, Alpha）で並んでいます
-for y in range(height):
-    for x in range(width):
-        # 1ピクセルあたりのバイトオフセットを計算
-        offset = (y * size_line) + (x * (bpp // 8))
-        
-        # 青色 (Blue: 255, Green: 0, Red: 0) を書き込み
-        img_data[offset] = 255     # Blue
-        img_data[offset + 1] = 0   # Green
-        img_data[offset + 2] = 0   # Red
-        img_data[offset + 3] = 0   # Alpha (通常は無視されます)
-
-# 5. 完成したイメージをウィンドウに一括転送
-m.mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 0, 0)
 
