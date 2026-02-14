@@ -18,4 +18,5 @@ package-dir = {"" = "src"}
 exclude = [
     'venv/',
     'src/mlx_CLXV',
+    'src/',
 ]

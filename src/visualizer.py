@@ -19,6 +19,13 @@ KEY_2 = 50
 KEY_3 = 51
 KEY_4 = 52
 
+NORTH = 1
+EAST = 2
+SOUTH = 4
+WEST = 8
+VOID = 31
+
+
 class MazeVisualizer:
 
     def __init__(self, maze: MazeGenerator) -> None:
@@ -52,19 +59,22 @@ class MazeVisualizer:
         self.draw_maze()
 
     # Attention to arguments, loop_exit
-    def close_window(self, *args) -> None:
+    def close_window(self, *args: "MazeVisualizer") -> None:
         self.m.mlx_destroy_image(self.mlx_ptr, self.img_ptr)
         self.m.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
         self.m.mlx_loop_exit(self.mlx_ptr)
 
     # Attention to arguments
-    def handle_keypress(self, keycode: int, *args) -> None:
+    def handle_keypress(self, keycode: int, *args: "MazeVisualizer") -> None:
         if keycode == KEY_1:
-            pass
+            self.maze.generate()
+            self.draw_maze()
         elif keycode == KEY_2:
-            pass
+            self.show_path = not self.show_path
+            self.draw_maze()
         elif keycode == KEY_3:
-            pass
+            self.wall_color_ind = (self.wall_color_ind + 1) % len(COLOR_WALL)
+            self.draw_maze()
         elif keycode == KEY_4:
             self.close_window()
 
@@ -73,18 +83,67 @@ class MazeVisualizer:
         sys.exit(0)
 
     def draw_maze(self) -> None:
-        # process
+        # Init img
+        for y in range(self.win_h):
+            for x in range(self.win_w):
+                self._put_pixel(y, x, COLOR_BACKGROUND)
+        # Draw wall
+        for y in range(self.height):
+            for x in range(self.width):
+                self._draw_wall(y, x)
+                if self.maze.grid[y][x] == VOID:
+                    self._fill_cell(y, x, COLOR_42, CELLSIZE - 2)
+        if self.show_path:
+            self._draw_path()
+        self._fill_cell(self.entry[1], self.entry[0],
+                        COLOR_ENTRY, CELLSIZE - 2)
+        self._fill_cell(self.exit[1], self.exit[0],
+                        COLOR_EXIT, CELLSIZE - 2)
         self.m.mlx_put_image_to_window(
             self.mlx_ptr, self.win_ptr, self.img_ptr, 0, 0
         )
 
+    def _draw_wall(self, y: int, x: int) -> None:
+        base_y, base_x = y * CELLSIZE, x * CELLSIZE
+        ind = self.wall_color_ind
+        if self.maze.grid[y][x] & NORTH:
+            for i in range(CELLSIZE):
+                self._put_pixel(base_y, base_x + i, COLOR_WALL[ind])
+        if self.maze.grid[y][x] & EAST:
+            for i in range(CELLSIZE):
+                self._put_pixel(
+                    base_y + i, base_x + CELLSIZE - 1, COLOR_WALL[ind])
+        if self.maze.grid[y][x] & SOUTH:
+            for i in range(CELLSIZE):
+                self._put_pixel(
+                    base_y + CELLSIZE - 1, base_x + i, COLOR_WALL[ind])
+        if self.maze.grid[y][x] & WEST:
+            for i in range(CELLSIZE):
+                self._put_pixel(base_y + i, base_x, COLOR_WALL[ind])
 
-    def draw_path(self) -> None:
-        pass
+    def _draw_path(self) -> None:
+        pos_x, pos_y = self.entry
+        for direction in self.maze.solution_path:
+            if direction == "N":
+                pos_y -= 1
+            elif direction == "E":
+                pos_x += 1
+            elif direction == "S":
+                pos_y += 1
+            elif direction == "W":
+                pos_x -= 1
+            self._fill_cell(pos_y, pos_x, COLOR_PATH, CELLSIZE // 4)
 
-    def regenerate(self) -> None:
-        pass
+    def _fill_cell(self, y: int, x: int, color: int, size: int) -> None:
+        base_y = y * CELLSIZE + (CELLSIZE - size) // 2
+        base_x = x * CELLSIZE + (CELLSIZE - size) // 2
+        for i in range(size):
+            for j in range(size):
+                self._put_pixel(base_y + i, base_x + j, color)
 
-    def rotate_wall_color(self) -> None:
-        pass
-
+    def _put_pixel(self, y: int, x: int, color: int) -> None:
+        offset = (self.line_len * y) + (self.bpp // 8 * x)
+        self.data_addr[offset] = color & 0xFF
+        self.data_addr[offset + 1] = (color >> 8) & 0xFF
+        self.data_addr[offset + 2] = (color >> 16) & 0xFF
+        self.data_addr[offset + 3] = 0xFF
