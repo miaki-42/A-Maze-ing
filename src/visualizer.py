@@ -122,6 +122,8 @@ class MazeVisualizer:
         """
         Render the maze to the MLX image and display it.
         """
+        if self.maze.grid is None:
+            raise ValueError("Error: maze.grid is None")
         for y in range(self.win_h):
             for x in range(self.win_w):
                 self._put_pixel(y, x, COLOR_BACKGROUND)
@@ -148,6 +150,8 @@ class MazeVisualizer:
             y: Row index of the cell.
             x: Column index of the cell.
         """
+        if self.maze.grid is None:
+            raise ValueError("Error: maze.grid is None")
         base_y, base_x = y * self.cellsize, x * self.cellsize
         ind = self.wall_color_ind
         if self.maze.grid[y][x] & NORTH:
@@ -169,6 +173,8 @@ class MazeVisualizer:
         """
         Draw the solver's solution path starting from the entry.
         """
+        if self.maze.solution_path is None:
+            raise ValueError("Error: maze.solution_path is None")
         pos_x, pos_y = self.entry
         for direction in self.maze.solution_path:
             if direction == "N":

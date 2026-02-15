@@ -14,8 +14,17 @@ dependencies = [
 packages = ["mazegen"]
 package-dir = {"" = "src"}
 
+[tool.setuptools.package-data]
+mazegen = ["py.typed"]
+
 [tool.mypy]
+mypy_path = "."
+explicit_package_bases = true
 exclude = [
     'venv/',
     'src/mlx_CLXV',
 ]
+
+[[tool.mypy.overrides]]
+module = "mlx.*"
+ignore_missing_imports = true

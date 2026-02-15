@@ -31,4 +31,4 @@ lint-strict:
 package:
 	python3 -m build
 	cp dist/mazegen-1.0.0-py3-none-any.whl .
-	pip install mazegen-1.0.0-py3-none-any.whl	
+	pip install --force-reinstall mazegen-1.0.0-py3-none-any.whl	
