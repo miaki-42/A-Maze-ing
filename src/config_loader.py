@@ -63,9 +63,11 @@ def load_config(file_path: str) -> dict[str, Any]:
         raise FileNotFoundError(
             f"Error: Configuration file '{file_path}' not found."
         )
+    except PermissionError:
+        raise PermissionError(f"Error: Permission denied '{file_path}'")
     except KeyError as e:
         raise KeyError(f"Error: Missing mandatory configuration key: {e}")
     except ValueError as e:
         raise ValueError(f"Error: Invalid value in configuration: {e}")
-    except Exception as e:
-        raise Exception(f"Error: Unexpected error: {e}")
+    except Exception:
+        raise

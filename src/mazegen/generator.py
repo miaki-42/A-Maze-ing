@@ -25,6 +25,8 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
         )
         self._apply_pattern_42()
         self._dig_iterative(*self.config.entry)
+        if not self.config.perfect:
+            self._add_loops()
         return self.grid
 
     @staticmethod
@@ -205,20 +207,32 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
         """
         Break additional walls to create multiple routes in the maze.
         """
-        extra_walls = (self.config.width * self.config.height) // 20
+        extra_walls = (self.config.width * self.config.height) // 10
         broken = 0
 
-        for _ in range(extra_walls * 5):
+        for _ in range(extra_walls * 3):
             if broken >= extra_walls:
                 break
 
-            tx = self.rng.randint(1, self.config.width - 2)
-            ty = self.rng.randint(1, self.config.height - 2)
-            direction = self.rng.choice([NORTH, EAST, SOUTH, WEST])
+            tx = self.rng.randint(0, self.config.width - 1)
+            ty = self.rng.randint(0, self.config.height - 1)
+            (dx, dy), direction = self.rng.choice([
+                ((0, -1), NORTH),
+                ((1, 0), EAST),
+                ((0, 1), SOUTH),
+                ((-1, 0), WEST)
+            ])
 
             if (
                 not (self.grid[ty][tx] & direction)
                 or (self.grid[ty][tx] & VOID)
+            ):
+                continue
+            new_x, new_y = tx + dx, ty + dy
+            if (
+                not (0 <= new_x < self.config.width)
+                or not (0 <= new_y < self.config.height)
+                or self.grid[new_y][new_x] & VOID
             ):
                 continue
 

@@ -19,7 +19,7 @@ if __name__ == "__main__":
         mazegen.generate()
         mazegen.save()
     except Exception as e:
-        print(f"Error: {e}")
+        print(e)
         sys.exit(1)
 
     # User interaction

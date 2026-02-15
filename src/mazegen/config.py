@@ -17,7 +17,8 @@ class MazeConfig(BaseModel):
     exit: tuple[int, int] = Field(description="Exit point coordinates (x,y)")
     output_file: str = Field(description="Output file path")
     perfect: bool = Field(description="Whether the maze is perfect (no loops)")
-    seed: Optional[int] = Field(description="Random seed for maze generation")
+    seed: Optional[int] = Field(
+        default=None, description="Random seed for maze generation")
 
     @model_validator(mode="after")
     def validate_coordinates(self) -> "MazeConfig":

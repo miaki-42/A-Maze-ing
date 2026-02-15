@@ -16,7 +16,7 @@ class MazeGenerator:
     """
     def __init__(self, width: int, height: int,
                  entry: tuple[int, int], exit: tuple[int, int],
-                 output_file: str, perfect: bool, seed: int):
+                 output_file: str, perfect: bool, seed: Optional[int] = None):
         """
         Initialize the MazeGenerator with maze parameters and configuration.
 
