@@ -60,8 +60,8 @@ class MazeVisualizer:
         _, w, h = self.m.mlx_get_screen_size(self.mlx_ptr)
         max_w, max_h = int(w * MARGIN), int(h * MARGIN)
         self.cellsize = min(max_w // self.width, max_h // self.height)
-        if self.cellsize < 6:
-            self.cellsize = 6
+        if self.cellsize < 5:
+            self.cellsize = 5
             print("Warning: Maze is too large")
         # Mlx Window
         self.win_w = self.width * self.cellsize
