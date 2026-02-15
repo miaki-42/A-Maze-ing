@@ -1,7 +1,9 @@
-WIDTH=100
-HEIGHT=50
+WIDTH=20
+HEIGHT=15
 ENTRY=0,0
-EXIT=18,13
+EXIT=19,14
 OUTPUT_FILE=maze.txt
-PERFECT=False
+PERFECT=True
 SEED=42
+
+# 無効キーは無視、seed値はオプション、スペースや小文字は許容、PERFECTのbool値は整数等でも可

@@ -217,7 +217,7 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
             tx = self.rng.randint(0, self.config.width - 1)
             ty = self.rng.randint(0, self.config.height - 1)
             (dx, dy), direction = self.rng.choice([
-                ((0, -1), NORTH), 
+                ((0, -1), NORTH),
                 ((1, 0), EAST),
                 ((0, 1), SOUTH),
                 ((-1, 0), WEST)
@@ -239,5 +239,3 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
             if self._is_safe_to_break(tx, ty, direction):
                 self._break_wall(tx, ty, direction)
                 broken += 1
-
-            

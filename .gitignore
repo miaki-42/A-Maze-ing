@@ -1,0 +1,12 @@
+# Tmp
+__pycache__/
+.mypy_cache/
+src/mazegen.egg-info/
+
+# Product
+dist/
+*.txt
+!config.txt
+
+# Other
+venv/
