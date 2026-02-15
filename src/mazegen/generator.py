@@ -210,20 +210,34 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
         extra_walls = (self.config.width * self.config.height) // 10
         broken = 0
 
-        for _ in range(extra_walls * 5):
+        for _ in range(extra_walls * 3):
             if broken >= extra_walls:
                 break
 
-            tx = self.rng.randint(1, self.config.width - 2)
-            ty = self.rng.randint(1, self.config.height - 2)
-            direction = self.rng.choice([NORTH, EAST, SOUTH, WEST])
+            tx = self.rng.randint(0, self.config.width - 1)
+            ty = self.rng.randint(0, self.config.height - 1)
+            (dx, dy), direction = self.rng.choice([
+                ((0, -1), NORTH), 
+                ((1, 0), EAST),
+                ((0, 1), SOUTH),
+                ((-1, 0), WEST)
+            ])
 
             if (
                 not (self.grid[ty][tx] & direction)
                 or (self.grid[ty][tx] & VOID)
             ):
                 continue
+            new_x, new_y = tx + dx, ty + dy
+            if (
+                not (0 <= new_x < self.config.width)
+                or not (0 <= new_y < self.config.height)
+                or self.grid[new_y][new_x] & VOID
+            ):
+                continue
 
             if self._is_safe_to_break(tx, ty, direction):
                 self._break_wall(tx, ty, direction)
                 broken += 1
+
+            
