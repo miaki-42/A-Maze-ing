@@ -5,8 +5,7 @@ MLXDIR = src/mlx_CLXV
 install:
 	pip install --upgrade pip
 	pip install flake8 mypy build
-	@ls mazegen-1.0.0-py3-none-any.whl > /dev/null 2>&1 || (python3 -m build && cp dist/mazegen-1.0.0-py3-none-any.whl .)
-	pip install mazegen-1.0.0-py3-none-any.whl
+	@ls mazegen-1.0.0-py3-none-any.whl > /dev/null 2>&1 || make package
 	$(MAKE) -C $(MLXDIR)
 	pip install $(MLXDIR)/mlx-2.2-py3-none-any.whl
 
@@ -31,3 +30,5 @@ lint-strict:
 
 package:
 	python3 -m build
+	cp dist/mazegen-1.0.0-py3-none-any.whl .
+	pip install mazegen-1.0.0-py3-none-any.whl	

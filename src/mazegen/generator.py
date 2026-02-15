@@ -25,6 +25,8 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
         )
         self._apply_pattern_42()
         self._dig_iterative(*self.config.entry)
+        if not self.config.perfect:
+            self._add_loops()
         return self.grid
 
     @staticmethod
@@ -205,7 +207,7 @@ class DiggingGenerator(AbstractGeneratorAlgorithm):
         """
         Break additional walls to create multiple routes in the maze.
         """
-        extra_walls = (self.config.width * self.config.height) // 20
+        extra_walls = (self.config.width * self.config.height) // 10
         broken = 0
 
         for _ in range(extra_walls * 5):

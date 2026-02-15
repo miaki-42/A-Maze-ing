@@ -4,7 +4,7 @@ import sys
 from mazegen import MazeGenerator
 from mlx import Mlx
 
-CELLSIZE = 16
+MARGIN = 0.9
 
 COLOR_BACKGROUND = 0x000000
 COLOR_ENTRY = 0x00FF00
@@ -41,9 +41,16 @@ class MazeVisualizer:
         # Init Mlx
         self.m = Mlx()
         self.mlx_ptr = self.m.mlx_init()
+        # Get window size
+        _, w, h = self.m.mlx_get_screen_size(self.mlx_ptr)
+        max_w, max_h = int(w * MARGIN), int(h * MARGIN)
+        self.cellsize = min(max_w // self.width, max_h // self.height)
+        if self.cellsize < 6:
+            self.cellsize = 6
+            print("Warning: Maze is too large")
         # Mlx Window
-        self.win_w = self.width * CELLSIZE
-        self.win_h = self.height * CELLSIZE
+        self.win_w = self.width * self.cellsize
+        self.win_h = self.height * self.cellsize
         self.win_ptr = self.m.mlx_new_window(
             self.mlx_ptr, self.win_w, self.win_h, "A-Maze-ing"
         )
@@ -92,33 +99,33 @@ class MazeVisualizer:
             for x in range(self.width):
                 self._draw_wall(y, x)
                 if self.maze.grid[y][x] == VOID:
-                    self._fill_cell(y, x, COLOR_42, CELLSIZE - 2)
+                    self._fill_cell(y, x, COLOR_42, self.cellsize - 2)
         if self.show_path:
             self._draw_path()
         self._fill_cell(self.entry[1], self.entry[0],
-                        COLOR_ENTRY, CELLSIZE - 2)
+                        COLOR_ENTRY, self.cellsize - 2)
         self._fill_cell(self.exit[1], self.exit[0],
-                        COLOR_EXIT, CELLSIZE - 2)
+                        COLOR_EXIT, self.cellsize - 2)
         self.m.mlx_put_image_to_window(
             self.mlx_ptr, self.win_ptr, self.img_ptr, 0, 0
         )
 
     def _draw_wall(self, y: int, x: int) -> None:
-        base_y, base_x = y * CELLSIZE, x * CELLSIZE
+        base_y, base_x = y * self.cellsize, x * self.cellsize
         ind = self.wall_color_ind
         if self.maze.grid[y][x] & NORTH:
-            for i in range(CELLSIZE):
+            for i in range(self.cellsize):
                 self._put_pixel(base_y, base_x + i, COLOR_WALL[ind])
         if self.maze.grid[y][x] & EAST:
-            for i in range(CELLSIZE):
+            for i in range(self.cellsize):
                 self._put_pixel(
-                    base_y + i, base_x + CELLSIZE - 1, COLOR_WALL[ind])
+                    base_y + i, base_x + self.cellsize - 1, COLOR_WALL[ind])
         if self.maze.grid[y][x] & SOUTH:
-            for i in range(CELLSIZE):
+            for i in range(self.cellsize):
                 self._put_pixel(
-                    base_y + CELLSIZE - 1, base_x + i, COLOR_WALL[ind])
+                    base_y + self.cellsize - 1, base_x + i, COLOR_WALL[ind])
         if self.maze.grid[y][x] & WEST:
-            for i in range(CELLSIZE):
+            for i in range(self.cellsize):
                 self._put_pixel(base_y + i, base_x, COLOR_WALL[ind])
 
     def _draw_path(self) -> None:
@@ -132,11 +139,11 @@ class MazeVisualizer:
                 pos_y += 1
             elif direction == "W":
                 pos_x -= 1
-            self._fill_cell(pos_y, pos_x, COLOR_PATH, CELLSIZE // 4)
+            self._fill_cell(pos_y, pos_x, COLOR_PATH, self.cellsize // 4)
 
     def _fill_cell(self, y: int, x: int, color: int, size: int) -> None:
-        base_y = y * CELLSIZE + (CELLSIZE - size) // 2
-        base_x = x * CELLSIZE + (CELLSIZE - size) // 2
+        base_y = y * self.cellsize + (self.cellsize - size) // 2
+        base_x = x * self.cellsize + (self.cellsize - size) // 2
         for i in range(size):
             for j in range(size):
                 self._put_pixel(base_y + i, base_x + j, color)
