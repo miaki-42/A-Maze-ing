@@ -20,17 +20,23 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
+In the 42 environment, the following command(s) must be executed in order to use MLX.
+```
+# 3. For mlx
+./setting_mlx.sh
+```
+
 ## 2. Installation
 Use the provided Makefile to install necessary dependencies and the reusable mazegen module.
 ```
-# 3. Install dependencies and the local module
+# 4. Install dependencies and the local module
 make install
 ```
 
 ## 3. Execution
 Once the installation is complete, you can run the program using the default configuration.
 ```
-# 4. Run the program
+# 5. Run the program
 make run
 ```
 
@@ -77,9 +83,9 @@ The core generation logic employs a Recursive Backtracker using a **Digging meth
 
 # Team and Project Management
 ## Roles of Each Team Member
-- Member A: Focused on the core generation logic, including maze generation (Recursive Backtracker), configuration file parsing, and the hexadecimal file output system.
+- kkitagaw: Focused on the core generation logic, including maze generation (Recursive Backtracker), configuration file parsing, and the hexadecimal file output system.
 
-- Member B: Focused on the pathfinding algorithm (BFS), building the Makefile, documentation, graphical visualization using MLX, and overall project integration.
+- komatsuk: Focused on the pathfinding algorithm (BFS), building the Makefile, documentation, graphical visualization using MLX, and overall project integration.
 
 ## Anticipated Planning and Evolution
 Our project began with a collaborative session to deeply interpret the subject requirements. We jointly decided on the algorithms to be used and designed the overall class structure before writing any code. This initial investment in architectural planning allowed us to work independently on our respective modules with minimal integration conflicts.
@@ -88,6 +94,9 @@ Our project began with a collaborative session to deeply interpret the subject r
 - **Successes**: The decision to spend significant time on the initial design phase was highly effective. Because the class interfaces and data structures were clearly defined at the start, we encountered no major logic errors or compatibility issues during the merging phase.
 
 - **Improvements**: In hindsight, prioritizing the development of the MLX graphical interface would have been beneficial. Having a visual debugging tool earlier in the process would have made the validation of the generation and solving logic even smoother than it was with terminal-only feedback.
+
+## Used specific tools
+I’m not using any specific tools.
 
 <br>
 
