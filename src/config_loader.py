@@ -51,7 +51,7 @@ def load_config(file_path: str) -> dict[str, Any]:
             "entry": tuple(map(int, raw_data["ENTRY"].split(','))),
             "exit": tuple(map(int, raw_data["EXIT"].split(','))),
             "output_file": raw_data["OUTPUT_FILE"],
-            "perfect": raw_data["PERFECT"].lower() == "true",
+            "perfect": raw_data["PERFECT"],
         }
 
         if "SEED" in raw_data:
